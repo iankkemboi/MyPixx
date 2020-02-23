@@ -15,5 +15,5 @@ interface ImageApi {
     @GET("/api?")
     fun getPixbyResponse(@Query("key") key: String?,
                          @Query("q") q: String?,
-                         @Query("image_type") image_type: String?): Observable<ResponsePOJO<List<Hits>>>
+                         @Query("image_type") image_type: String?): Observable<ResponsePOJO>
 }

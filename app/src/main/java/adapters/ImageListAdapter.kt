@@ -3,12 +3,17 @@ package adapters
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.ian.mypixxx.R
 import com.ian.mypixxx.databinding.ItemImageBinding
 import model.Hits
 import ui.ImageItemViewModel
+
 
 class ImageListAdapter: RecyclerView.Adapter<ImageListAdapter.ViewHolder>() {
     private lateinit var imgList:List<Hits>
@@ -30,6 +35,9 @@ class ImageListAdapter: RecyclerView.Adapter<ImageListAdapter.ViewHolder>() {
         this.imgList = imggList
         Log.v("imglist",imggList.get(0).user)
         notifyDataSetChanged()
+    }
+
+    fun checkroomdb(){
     }
 
     class ViewHolder(private val binding: ItemImageBinding): RecyclerView.ViewHolder(binding.root){

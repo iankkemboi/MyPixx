@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import daggerinjections.components.DaggerViewModelInjector
 import daggerinjections.components.ViewModelInjector
 import daggerinjections.module.NetworkModule
+import io.reactivex.Single
+import io.reactivex.disposables.Disposable
 import ui.ImagesListViewModel
 
 abstract class BaseViewModel: ViewModel(){
@@ -24,4 +26,6 @@ abstract class BaseViewModel: ViewModel(){
             is ImagesListViewModel -> injector.inject(this)
         }
     }
+
+
 }

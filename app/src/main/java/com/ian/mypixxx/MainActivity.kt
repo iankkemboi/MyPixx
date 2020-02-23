@@ -1,16 +1,17 @@
 package com.ian.mypixxx
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.annotation.StringRes
-import androidx.lifecycle.ViewModelProvider
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.ian.mypixxx.databinding.ActivityMainBinding
+import daggerinjections.vmfactory.ViewModelFactory
 import ui.ImagesListViewModel
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -24,12 +25,30 @@ class MainActivity : AppCompatActivity() {
         binding.imgrecycler.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
-        viewModel = ViewModelProvider(this).get(ImagesListViewModel::class.java)
+        viewModel = ViewModelProvider(this,ViewModelFactory(this)).get(ImagesListViewModel::class.java)
 
         viewModel.errorMessage.observe(this, Observer {
                 errorMessage -> if(errorMessage != null) showError(errorMessage) else hideError()
         })
         binding.viewModel = viewModel
+
+        binding.search.isActivated = true
+        binding.search.queryHint = "Type your keyword here"
+        binding.search.onActionViewExpanded()
+        binding.search.isIconified = false
+        binding.search.clearFocus()
+
+        binding.search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override  fun onQueryTextSubmit(query: String?): Boolean {
+               viewModel.loadPosts(query)
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+
+                return false
+            }
+        })
     }
     private fun showError( errorMessage:String){
         errorSnackbar = Snackbar.make(binding.root, errorMessage, Snackbar.LENGTH_INDEFINITE)

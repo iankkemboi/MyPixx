@@ -49,9 +49,9 @@ object NetworkModule {
         //  final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
         val builder = OkHttpClient.Builder()
         builder.addInterceptor(logging)
-        val OkHttpClient = builder.connectTimeout(240, TimeUnit.SECONDS)
-            .writeTimeout(240, TimeUnit.SECONDS)
-            .readTimeout(240, TimeUnit.SECONDS)
+        val OkHttpClient = builder.connectTimeout(60, TimeUnit.SECONDS)
+            .writeTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
             .build()
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
