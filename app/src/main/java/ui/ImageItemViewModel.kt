@@ -17,12 +17,12 @@ import model.Hits
 class ImageItemViewModel: BaseViewModel() {
     private val thumbnail = MutableLiveData<String>()
     private val username = MutableLiveData<String>()
-    private val tag = MutableLiveData<String>()
+    private val tags = MutableLiveData<String>()
 
     fun bind(image: Hits){
         thumbnail.value = image.previewURL
         username.value = "@"+image.user
-        tag.value = image.tags
+        tags.value = image.tags
     }
     companion object {
         @BindingAdapter("imageUrl")
@@ -34,27 +34,8 @@ class ImageItemViewModel: BaseViewModel() {
             //Picasso.with(imageView.getContext()).load(imageUrl).into(imageView);
         }
 
-        @BindingAdapter("items")
-        @JvmStatic
-        fun setItems(view: ChipGroup, tags: String?) {
-            if (tags == null // Since we are using liveData to observe data, any changes in that table(favorites)
-// will trigger the observer and hence rebinding data, which can lead to duplicates.
-                || view.childCount > 0
-            ) return
-            // dynamically create & add genre chips
-            val lsttags = tags.split(",").toTypedArray()
-            val context: Context = view.context
-            for (lsttag in lsttags) {
-                val chip = Chip(context)
-                chip.text = lsttag
 
-                chip.chipStrokeColor = ColorStateList.valueOf(
-                    context.resources.getColor(R.color.holo_green_dark)
-                )
-                chip.setChipBackgroundColorResource(R.color.holo_blue_light)
-                view.addView(chip)
-            }
-        }
+
     }
     fun getThumbnail():MutableLiveData<String>{
         return thumbnail
@@ -64,6 +45,6 @@ class ImageItemViewModel: BaseViewModel() {
         return username
     }
     fun getTags():MutableLiveData<String>{
-        return tag
+        return tags
     }
 }

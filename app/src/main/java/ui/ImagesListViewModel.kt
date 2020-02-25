@@ -5,13 +5,10 @@ import adapters.ImageListAdapter
 import android.content.ContentValues.TAG
 import android.util.Log
 import android.view.View
-import android.widget.ImageView
-import androidx.databinding.BindingAdapter
 import androidx.databinding.ObservableField
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import base.BaseViewModel
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import constants.PIXABY_API_KEY
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -21,7 +18,6 @@ import model.Hits
 import model.ResponsePOJO
 import model.db.ImgDao
 import network.ImageApi
-
 import javax.inject.Inject
 
 
@@ -30,7 +26,10 @@ class ImagesListViewModel(private val imgDao: ImgDao): BaseViewModel(){
     lateinit var varimageapi: ImageApi
     val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
 
-    val imgListAdapter: ImageListAdapter = ImageListAdapter()
+    private var respse: MutableLiveData<List<Hits>>? = null
+
+
+
     val errorMessage:MutableLiveData<String> = MutableLiveData()
 
     private var queryString = "fruits"
@@ -43,24 +42,22 @@ class ImagesListViewModel(private val imgDao: ImgDao): BaseViewModel(){
 
     init{
 
-        loadPosts(queryString)
+      //  loadPosts(queryString)
     }
 
-
+    fun getHits(queryst: String?): LiveData<List<Hits>> { //if the list is null
+        if (respse == null) {
+            respse = MutableLiveData<List<Hits>>()
+            //we will load it asynchronously from server in this method
+            loadPosts(queryst)
+        }
+        //finally we will return the list
+        return respse as MutableLiveData<List<Hits>>
+    }
 
      fun loadPosts(queryString: String?){
         var imgType = "photo"
-       /* subscription = Observable.fromCallable { imgDao.all }
-            .concatMap {
-                    dbList ->
-                if(dbList.isEmpty())
-                    varimageapi.getPixbyResponse(PIXABY_API_KEY,queryString,imgType).concatMap {
-                            apiPostList -> imgDao.insertAll(*apiPostList.toTypedArray())
-                        Observable.just(apiPostList)
-                    }
-                else
-                    Observable.just(dbList)
-            }*/
+
       subscription = varimageapi.getPixbyResponse(PIXABY_API_KEY,queryString,imgType)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -83,12 +80,8 @@ class ImagesListViewModel(private val imgDao: ImgDao): BaseViewModel(){
     }
 
     private  fun onRetrieveListSuccess(rsppojo: ResponsePOJO){
+
         val hitsresp = rsppojo.hits
-       /* Observable.just(imgDao.hitscount)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe( {result -> checkroomdb(result,hitsresp) },
-                { error -> onRetrieveListError(error)})*/
 
 
         Single.fromCallable {
@@ -105,8 +98,10 @@ class ImagesListViewModel(private val imgDao: ImgDao): BaseViewModel(){
                     Log.e(TAG, "Couldn't read values from database", error)
                 }
             )
-        imgListAdapter.updatePostList(hitsresp)
-        Log.v("list gett", rsppojo.hits[0].user)
+
+        respse?.value = hitsresp
+        Log.v("image tags",hitsresp[19].tags)
+
     }
 
     private fun onRetrieveListError(err: Throwable?){
@@ -132,17 +127,13 @@ class ImagesListViewModel(private val imgDao: ImgDao): BaseViewModel(){
 
     private fun poplistfromdb(rmhitsresp: List<Hits>){
         Log.v("Success","Successfully saved to db")
-        imgListAdapter.updatePostList(rmhitsresp)
+        respse?.value = rmhitsresp
 
     }
 private fun checkroomdb(hitcnt: Int?, rmhitsresp: List<Hits>){
     Log.d("int cnt", hitcnt.toString())
 
-       /* Observable.just(imgDao.insertAll(*rmhitsresp.toTypedArray()))
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe( { Log.d("RxJava", "Insert SUCCESS")  },
-                {error -> onRetrieveListError(error)})*/
+
 
 if(hitcnt?.compareTo( 0)!! < 1) {
     Single.fromCallable {

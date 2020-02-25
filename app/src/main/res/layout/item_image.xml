@@ -9,7 +9,7 @@
         <variable
             name="viewModel"
             type="ui.ImageItemViewModel" />
-        <variable name="picasso" type="com.squareup.picasso.Picasso"/>
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,10 +29,10 @@ android:background="@color/white"
             tools:layout_editor_absoluteX="16dp">
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="80dp">
+                android:layout_height="120dp">
 
                 <ImageView
-                    android:layout_width="60dp"
+                    android:layout_width="70dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
                     android:layout_marginStart="20dp"
@@ -41,7 +41,7 @@ android:background="@color/white"
                     app:imageUrl="@{viewModel.thumbnail}"
 
 
-                    android:layout_height="60dp"></ImageView>
+                    android:layout_height="70dp"></ImageView>
 
             <TextView
                 android:id="@+id/post_title"
@@ -59,12 +59,13 @@ android:background="@color/white"
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/chip_group"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
+                    android:layout_height="70dp"
                     android:layout_alignParentBottom="true"
                     android:layout_marginStart="100dp"
                     android:layout_marginEnd="5dp"
                     android:layout_marginBottom="10dp"
-                    app:items="@{viewModel.tags}"
+                    app:detailsitems="@{viewModel.tags}"
+
                     app:chipSpacing="5dp">
                 </com.google.android.material.chip.ChipGroup>
 

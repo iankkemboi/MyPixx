@@ -12,39 +12,61 @@ import com.bumptech.glide.request.RequestOptions
 import com.ian.mypixxx.R
 import com.ian.mypixxx.databinding.ItemImageBinding
 import model.Hits
+import model.RecyclerViewCallback
+import model.UpdateRecycleView
 import ui.ImageItemViewModel
 
 
-class ImageListAdapter: RecyclerView.Adapter<ImageListAdapter.ViewHolder>() {
-    private lateinit var imgList:List<Hits>
+class ImageListAdapter( private  var imgList:List<Hits>): RecyclerView.Adapter<ImageListAdapter.ViewHolder>() {
+
+    var itemClick: ((Hits) -> Unit)? = null
+    var recyclerViewCallback: RecyclerViewCallback? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageListAdapter.ViewHolder {
         val binding: ItemImageBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.item_image, parent, false)
-        return ViewHolder(binding)
+
+        return ViewHolder(binding).apply {
+            itemView.setOnClickListener {
+
+              this@ImageListAdapter.recyclerViewCallback?.onRecycleViewItemClick(imgList[adapterPosition], adapterPosition)
+            }
+        }
+
     }
 
     override fun onBindViewHolder(holder: ImageListAdapter.ViewHolder, position: Int) {
         holder.bind(imgList[position])
+
+
+
+    }
+
+    fun setOnCallbackListener(recyclerViewCallback: RecyclerViewCallback) {
+        this.recyclerViewCallback = recyclerViewCallback
     }
 
     override fun getItemCount(): Int {
-        return if(::imgList.isInitialized) imgList.size else 0
+        return imgList.size
     }
 
-    fun updatePostList(imggList:List<Hits>){
+    /* updatePostList(imggList:List<Hits>){
         this.imgList = imggList
-        Log.v("imglist",imggList.get(0).user)
-        notifyDataSetChanged()
-    }
 
-    fun checkroomdb(){
-    }
+        notifyDataSetChanged()
+    }*/
+
 
     class ViewHolder(private val binding: ItemImageBinding): RecyclerView.ViewHolder(binding.root){
         private val viewModel = ImageItemViewModel()
+
         fun bind(imgpojo:Hits){
             viewModel.bind(imgpojo)
             binding.viewModel = viewModel
+
+
         }
+
+
     }
+
 }

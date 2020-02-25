@@ -1,9 +1,12 @@
 package model
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.android.parcel.Parcelize
 
 @Entity
+@Parcelize
 data class Hits (
     @field:PrimaryKey
     val id : Int,
@@ -22,10 +25,10 @@ data class Hits (
     val imageSize : Int,
     val views : Int,
     val downloads : Int,
-    val favorites : Int,
-    val likes : Int,
-    val comments : Int,
+    val favorites : String,
+    val likes : String,
+    val comments : String,
     val user_id : Int,
     val user : String,
     val userImageURL : String
-)
+): Parcelable
