@@ -1,5 +1,7 @@
 package adapters
 
+import android.content.Context
+import android.content.res.ColorStateList
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,6 +11,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.ian.mypixxx.R
 import com.ian.mypixxx.databinding.ItemImageBinding
 import model.Hits
@@ -17,7 +21,7 @@ import model.UpdateRecycleView
 import ui.ImageItemViewModel
 
 
-class ImageListAdapter( private  var imgList:List<Hits>): RecyclerView.Adapter<ImageListAdapter.ViewHolder>() {
+class ImageListAdapter( private  var imgList:List<Hits>,val ct: Context): RecyclerView.Adapter<ImageListAdapter.ViewHolder>() {
 
     var itemClick: ((Hits) -> Unit)? = null
     var recyclerViewCallback: RecyclerViewCallback? = null
@@ -36,6 +40,7 @@ class ImageListAdapter( private  var imgList:List<Hits>): RecyclerView.Adapter<I
 
     override fun onBindViewHolder(holder: ImageListAdapter.ViewHolder, position: Int) {
         holder.bind(imgList[position])
+
 
 
 
@@ -59,9 +64,11 @@ class ImageListAdapter( private  var imgList:List<Hits>): RecyclerView.Adapter<I
     class ViewHolder(private val binding: ItemImageBinding): RecyclerView.ViewHolder(binding.root){
         private val viewModel = ImageItemViewModel()
 
+
         fun bind(imgpojo:Hits){
             viewModel.bind(imgpojo)
             binding.viewModel = viewModel
+
 
 
         }

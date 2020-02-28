@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewCallback {
             .observe(this,
                 Observer<List<Hits>> { imgList ->
 
-                    val imgadapter = ImageListAdapter(imgList)
+                    val imgadapter = ImageListAdapter(imgList,this@MainActivity)
                     imgadapter.setOnCallbackListener(this)
                     binding.imgrecycler.adapter = imgadapter
                 })
@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewCallback {
         builder.setTitle("Image Listing")
 
         // Display a message on alert dialog
-        builder.setMessage("Are you want to see more details of this image listing")
+        builder.setMessage("Are you sure you want to see more details of this image listing")
 
         // Set a positive button and its click listener on alert dialog
         builder.setPositiveButton("YES"){dialog, which ->
